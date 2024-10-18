@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
@@ -7,7 +7,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 
-import AddProduct from "./AddProduct/AddProduct";
 import BasicTable from "./Table/Table";
 
 import "./App.css";
@@ -22,13 +21,32 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+
 function App() {
   const [formOpen, setFormOpen] = useState(false);
   const handleOpen = () => setFormOpen(true);
   const handleClose = () => setFormOpen(false);
+
+  const [message, setMessage] = useState("");
+  const fetchMessage = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/message");
+
+      const data = await response.json();
+      setMessage(data.message);
+    } catch (error) {
+      console.error("Error fetching message:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMessage();
+  }, []);
+
   return (
     <>
       <div>
+        {message}
         <Breadcrumbs aria-label="breadcrumb">
           <Link underline="hover" color="inherit" href="/">
             Home
