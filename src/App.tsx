@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
@@ -27,61 +27,42 @@ function App() {
   const handleOpen = () => setFormOpen(true);
   const handleClose = () => setFormOpen(false);
 
-  const [message, setMessage] = useState("");
-  const fetchMessage = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/api/message");
-
-      const data = await response.json();
-      setMessage(data.message);
-    } catch (error) {
-      console.error("Error fetching message:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchMessage();
-  }, []);
-
   return (
-    <>
-      <div>
-        {message}
-        <Breadcrumbs aria-label="breadcrumb">
-          <Link underline="hover" color="inherit" href="/">
-            Home
-          </Link>
-          <Link underline="hover" color="inherit" href="/">
-            All Products
-          </Link>
-        </Breadcrumbs>
-        <Typography variant="h3">Inventory App</Typography>
-        <Typography variant="h6">Add a product</Typography>
+    <div>
+      <Breadcrumbs aria-label="breadcrumb">
+        <Link underline="hover" color="inherit" href="/">
+          Home
+        </Link>
+        <Link underline="hover" color="inherit" href="/">
+          All Products
+        </Link>
+      </Breadcrumbs>
+      <Typography variant="h3">Inventory App</Typography>
+      <Typography variant="h6">Add a product</Typography>
 
-        <Stack spacing={2} direction="row">
-          <Button onClick={handleOpen} variant="text">
-            Add a product
-          </Button>
-        </Stack>
+      <Stack spacing={2} direction="row">
+        <Button onClick={handleOpen} variant="text">
+          Add a product
+        </Button>
+      </Stack>
 
-        <BasicTable />
-        <Modal
-          open={formOpen}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Modal
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Add a product modal
-            </Typography>
-          </Box>
-        </Modal>
-      </div>
-    </>
+      <BasicTable />
+      <Modal
+        open={formOpen}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Modal
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Add a product modal
+          </Typography>
+        </Box>
+      </Modal>
+    </div>
   );
 }
 
