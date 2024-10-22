@@ -3,9 +3,12 @@ import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+
+import { postProduct } from "../api/products";
 
 import BasicTable from "./Table/Table";
 
@@ -26,6 +29,7 @@ function App() {
   const [formOpen, setFormOpen] = useState(false);
   const handleOpen = () => setFormOpen(true);
   const handleClose = () => setFormOpen(false);
+  const [inputValue, setInputValue] = useState("");
 
   return (
     <div>
@@ -57,8 +61,26 @@ function App() {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Modal
           </Typography>
+          <Button onClick={handleClose} variant="text">
+            Close
+          </Button>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             Add a product modal
+            <Box
+              component="form"
+              sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField
+                label="name"
+                variant="outlined"
+                onChange={(e) => setInputValue(e.target.value)}
+              />
+            </Box>
+            <Button onClick={() => postProduct(inputValue)} variant="text">
+              Submit
+            </Button>
           </Typography>
         </Box>
       </Modal>

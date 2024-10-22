@@ -44,7 +44,7 @@ app.post("/api/products", async (req, res) => {
   }
 
   try {
-    const result = await pool.query("INSERT INTO products name VALUES ($1)", [
+    const result = await pool.query("INSERT INTO products (name) VALUES ($1)", [
       name,
     ]);
     res.status(201).json(result.rows[0]);

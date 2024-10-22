@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 export default function BasicTable() {
-  const [products, setProducts] = useState("");
+  const [products, setProducts] = useState([]);
   const fetchProducts = async () => {
     try {
       const response = await fetch("http://localhost:3000/api/products");
@@ -39,7 +39,7 @@ export default function BasicTable() {
         </TableHead>
         <TableBody>
           {/* add types and other fields */}
-          {products.map((row) => (
+          {products?.map((row) => (
             <TableRow
               key={row.name}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
