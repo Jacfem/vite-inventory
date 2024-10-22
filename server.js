@@ -36,6 +36,48 @@ app.get("/api/products", async (req, res) => {
   });
 });
 
+app.post("/api/products", async (req, res) => {
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ error: "Name field is required" });
+  }
+
+  try {
+    const result = await pool.query("INSERT INTO products (name) VALUES ($1)", [
+      name,
+    ]);
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+app.put("/api/products/:id", async (req, res) => {
+  const { name } = req.body;
+  const productId = req.params.id;
+
+  if (!name) {
+    return res.status(400).json({ error: "Name field is required" });
+  }
+
+  try {
+    const result = await pool.query(
+      "UPDATE products SET name = $1 WHERE id = $2;",
+      [name, productId]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    res.status(200).json({ message: "Product updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
