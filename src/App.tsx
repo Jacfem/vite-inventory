@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
@@ -7,7 +9,6 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-
 import { postProduct } from "../api/products";
 
 import BasicTable from "./Table/Table";
@@ -31,6 +32,15 @@ function App() {
   const handleClose = () => setFormOpen(false);
   const [inputValue, setInputValue] = useState("");
 
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: postProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+  });
+
   return (
     <div>
       <Breadcrumbs aria-label="breadcrumb">
@@ -42,14 +52,12 @@ function App() {
         </Link>
       </Breadcrumbs>
       <Typography variant="h3">Inventory App</Typography>
-      <Typography variant="h6">Add a product</Typography>
 
       <Stack spacing={2} direction="row">
         <Button onClick={handleOpen} variant="text">
           Add a product
         </Button>
       </Stack>
-
       <BasicTable />
       <Modal
         open={formOpen}
@@ -58,14 +66,8 @@ function App() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Modal
-          </Typography>
-          <Button onClick={handleClose} variant="text">
-            Close
-          </Button>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Add a product modal
+            Add a product
             <Box
               component="form"
               sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
@@ -78,7 +80,16 @@ function App() {
                 onChange={(e) => setInputValue(e.target.value)}
               />
             </Box>
-            <Button onClick={() => postProduct(inputValue)} variant="text">
+            <Button onClick={handleClose} variant="text">
+              Close
+            </Button>
+            <Button
+              onClick={() => {
+                mutation.mutate(inputValue);
+                handleClose();
+              }}
+              variant="text"
+            >
               Submit
             </Button>
           </Typography>

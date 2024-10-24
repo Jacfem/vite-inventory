@@ -1,4 +1,5 @@
-// to do - use react query
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 // update domains
 export const postProduct = async (inputValue: string) => {
   try {
@@ -14,3 +15,18 @@ export const postProduct = async (inputValue: string) => {
     console.error("Error posting product:", error);
   }
 };
+
+export const getProducts = () => {
+  const {status, data} = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/products");
+        return await response.json();
+      } catch (error) {
+        console.error("Error fetching message:", error);
+      }
+    },
+  })
+  return {status, data};
+}
