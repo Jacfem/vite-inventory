@@ -14,7 +14,7 @@ import { postProduct } from "../api/products";
 import BasicTable from "./Table/Table";
 
 import "./App.css";
-const style = {
+export const modalStyle = {
   position: "absolute",
   top: "50%",
   left: "50%",
@@ -34,7 +34,7 @@ function App() {
 
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const postMutation = useMutation({
     mutationFn: postProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
@@ -85,7 +85,7 @@ function App() {
             </Button>
             <Button
               onClick={() => {
-                mutation.mutate(inputValue);
+                postMutation.mutate(inputValue);
                 handleClose();
               }}
               variant="text"

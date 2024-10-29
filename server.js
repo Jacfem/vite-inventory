@@ -78,6 +78,21 @@ app.put("/api/products/:id", async (req, res) => {
   }
 });
 
+app.delete("/api/products/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await pool.query("DELETE FROM products WHERE id = $1", [id]);
+    if (result.rowCount === 0) {
+      return res.status(404).send("Product not found");
+    }
+    res.status(204).send();
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    res.status(500).send("Server error");
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
