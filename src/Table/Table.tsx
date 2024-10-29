@@ -11,13 +11,15 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 
 import { getProducts, deleteProduct } from "../../api/products";
+import { Product, ProductId } from "../../api/types";
+
 import { EditModal } from "./EditModal";
 
 export default function BasicTable() {
   const queryClient = useQueryClient();
   const { data } = getProducts();
   const [editOpen, setEditOpen] = useState(false);
-  const [currentProduct, setCurrentProduct] = useState(null);
+  const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
 
   const deleteMutation = useMutation({
     mutationFn: deleteProduct,
@@ -42,7 +44,7 @@ export default function BasicTable() {
             </TableHead>
             <TableBody>
               {/* add types and other fields */}
-              {data.map((row) => (
+              {data.map((row: Product) => (
                 <TableRow
                   key={row.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -68,7 +70,7 @@ export default function BasicTable() {
                     </Button>
                     {editOpen && (
                       <EditModal
-                        item={currentProduct}
+                        item={currentProduct!}
                         open={editOpen}
                         onClose={() => {
                           setEditOpen(false);

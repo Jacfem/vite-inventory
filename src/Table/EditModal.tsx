@@ -7,12 +7,13 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
-import { modalStyle } from "../App";
+import { modalStyle } from "../styles";
 import { putProduct } from "../../api/products";
+import { Product } from "../../api/types";
 
 interface EditModalProps {
   open: boolean;
-  item: any; // fill in model for type
+  item: Product;
   onClose: () => void;
 }
 
@@ -28,44 +29,42 @@ export const EditModal = ({ open, item, onClose }: EditModalProps) => {
     },
   });
   return (
-    open && (
-      <Modal
-        open={open}
-        onClose={onClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={modalStyle}>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Edit product
-            <Box
-              component="form"
-              sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
-              noValidate
-              autoComplete="off"
-            >
-              <TextField
-                label="name"
-                variant="outlined"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-              />
-            </Box>
-            <Button onClick={onClose} variant="text">
-              Close
-            </Button>
-            <Button
-              onClick={() => {
-                putMutation.mutate({ id, name: inputValue });
-                onClose();
-              }}
-              variant="text"
-            >
-              Submit
-            </Button>
-          </Typography>
-        </Box>
-      </Modal>
-    )
+    <Modal
+      open={open}
+      onClose={onClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={modalStyle}>
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          Edit product
+          <Box
+            component="form"
+            sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
+            noValidate
+            autoComplete="off"
+          >
+            <TextField
+              label="name"
+              variant="outlined"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+          </Box>
+          <Button onClick={onClose} variant="text">
+            Close
+          </Button>
+          <Button
+            onClick={() => {
+              putMutation.mutate({ id, name: inputValue });
+              onClose();
+            }}
+            variant="text"
+          >
+            Submit
+          </Button>
+        </Typography>
+      </Box>
+    </Modal>
   );
 };

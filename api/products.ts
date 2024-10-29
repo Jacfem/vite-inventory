@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { Product, ProductId } from './types';
+
 // update domains
 
 export const getProducts = () => {
@@ -14,7 +16,7 @@ export const getProducts = () => {
       }
     },
   })
-  return {status, data};
+  return { status, data };
 }
 
 export const postProduct = async (inputValue: string) => {
@@ -32,8 +34,7 @@ export const postProduct = async (inputValue: string) => {
   }
 };
 
-// add model for type
-export const putProduct = async (item: any) => {
+export const putProduct = async (item: Product) => {
   const {id, name } = item;
   try {
     const response = await fetch(`http://localhost:3000/api/products/${id}`, {
@@ -49,7 +50,7 @@ export const putProduct = async (item: any) => {
   }
 };
 
-export const deleteProduct = async (id: number) => {
+export const deleteProduct = async (id: ProductId) => {
   try {
     await fetch(`http://localhost:3000/api/products/${id}`, {
       method: "DELETE",
