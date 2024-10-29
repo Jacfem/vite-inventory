@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Table from "@mui/material/Table";
@@ -8,11 +9,15 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import { getProducts, deleteProduct, putProduct } from "../../api/products";
+
+import { getProducts, deleteProduct } from "../../api/products";
+import { EditModal } from "./EditModal";
 
 export default function BasicTable() {
   const queryClient = useQueryClient();
   const { data } = getProducts();
+  const [editOpen, setEditOpen] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(null);
 
   const deleteMutation = useMutation({
     mutationFn: deleteProduct,
@@ -20,13 +25,6 @@ export default function BasicTable() {
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
   });
-
-  // const putMutation = useMutation({
-  //   mutationFn: putProduct,
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["products"] });
-  //   },
-  // });
 
   return (
     data && (
@@ -62,11 +60,22 @@ export default function BasicTable() {
                     <Button
                       variant="text"
                       onClick={() => {
-                        // putMutation.mutate(row.id);
+                        setEditOpen(true);
+                        setCurrentProduct(row);
                       }}
                     >
                       Edit
                     </Button>
+                    {editOpen && (
+                      <EditModal
+                        item={currentProduct}
+                        open={editOpen}
+                        onClose={() => {
+                          setEditOpen(false);
+                          setCurrentProduct(null);
+                        }}
+                      />
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

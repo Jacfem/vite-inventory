@@ -80,7 +80,6 @@ app.put("/api/products/:id", async (req, res) => {
 
 app.delete("/api/products/:id", async (req, res) => {
   const { id } = req.params;
-  console.log({ id });
 
   try {
     const result = await pool.query("DELETE FROM products WHERE id = $1", [id]);

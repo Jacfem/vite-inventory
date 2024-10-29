@@ -32,12 +32,14 @@ export const postProduct = async (inputValue: string) => {
   }
 };
 
-export const putProduct = async (id: number, inputValue: string) => {
+// add model for type
+export const putProduct = async (item: any) => {
+  const {id, name } = item;
   try {
     const response = await fetch(`http://localhost:3000/api/products/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: inputValue }),
+      body: JSON.stringify({ name }),
     });
 
     const data = await response.json();

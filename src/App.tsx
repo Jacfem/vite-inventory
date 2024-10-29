@@ -14,7 +14,7 @@ import { postProduct } from "../api/products";
 import BasicTable from "./Table/Table";
 
 import "./App.css";
-const style = {
+export const modalStyle = {
   position: "absolute",
   top: "50%",
   left: "50%",
