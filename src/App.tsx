@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
@@ -10,6 +10,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { postProduct } from "../api/products";
+import { findProductByUPC } from "../api/upc";
 
 import BasicTable from "./Table/Table";
 import { modalStyle } from "./styles";
@@ -30,6 +31,8 @@ function App() {
     },
   });
 
+  const { data, isFetched } = findProductByUPC();
+
   return (
     <div>
       <Breadcrumbs aria-label="breadcrumb">
@@ -47,6 +50,11 @@ function App() {
           Add a product
         </Button>
       </Stack>
+      <div>
+        {isFetched && data
+          ? `UPC item: ${data?.items && data?.items[0]}`
+          : "fetching..."}
+      </div>
       <BasicTable />
       <Modal
         open={formOpen}
