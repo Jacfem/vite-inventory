@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
@@ -21,6 +21,7 @@ function App() {
   const handleOpen = () => setFormOpen(true);
   const handleClose = () => setFormOpen(false);
   const [inputValue, setInputValue] = useState("");
+  const [upcValue, setUPCValue] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -31,8 +32,9 @@ function App() {
     },
   });
 
-  const { data, isFetched } = findProductByUPC();
+  const { data, isFetched, isFetching, refetch } = findProductByUPC(upcValue);
 
+  console.log({ isFetching });
   return (
     <div>
       <Breadcrumbs aria-label="breadcrumb">
@@ -50,11 +52,6 @@ function App() {
           Add a product
         </Button>
       </Stack>
-      <div>
-        {isFetched && data
-          ? `UPC item: ${data?.items && data?.items[0]}`
-          : "fetching..."}
-      </div>
       <BasicTable />
       <Modal
         open={formOpen}
@@ -76,9 +73,22 @@ function App() {
                 variant="outlined"
                 onChange={(e) => setInputValue(e.target.value)}
               />
+              <TextField
+                label="upc"
+                variant="outlined"
+                onChange={(e) => setUPCValue(e.target.value)}
+              />
             </Box>
             <Button onClick={handleClose} variant="text">
               Close
+            </Button>
+            <Button
+              onClick={() => {
+                refetch();
+              }}
+              variant="text"
+            >
+              Lookup by upc
             </Button>
             <Button
               onClick={() => {
@@ -89,6 +99,11 @@ function App() {
             >
               Submit
             </Button>
+            <div>
+              {isFetched && data
+                ? `UPC item: ${data?.items && data?.items[0].title}`
+                : "fetching..."}
+            </div>
           </Typography>
         </Box>
       </Modal>

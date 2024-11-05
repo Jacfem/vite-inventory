@@ -54,12 +54,9 @@ app.get("/api/proxy/upc/:id", async (req, res) => {
         return res.status(500).json({ error: "Failed to post item" });
       }
 
-      // Check for successful response
       if (response.statusCode === 201) {
-        // 201 Created
-        return res.status(201).json(body); // Send back the newly created item
+        return res.status(201).json(body);
       } else {
-        // Handle other response statuses
         return res.status(response.statusCode).json(body);
       }
     }
