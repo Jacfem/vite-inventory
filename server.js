@@ -4,6 +4,7 @@ import pg from "pg";
 const { Pool } = pg;
 import dotenv from "dotenv";
 dotenv.config();
+import request from "request";
 
 const app = express();
 // adjust this:
@@ -34,6 +35,32 @@ app.get("/api/products", async (req, res) => {
 
     res.status(200).json(result.rows);
   });
+});
+
+app.get("/api/proxy/upc/:id", async (req, res) => {
+  const upc = req.params.id;
+
+  request.post(
+    {
+      uri: `https://api.upcitemdb.com/prod/trial/lookup`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ upc: upc }),
+    },
+
+    (error, response, body) => {
+      if (error) {
+        return res.status(500).json({ error: "Failed to post item" });
+      }
+
+      if (response.statusCode === 201) {
+        return res.status(201).json(body);
+      } else {
+        return res.status(response.statusCode).json(body);
+      }
+    }
+  );
 });
 
 app.post("/api/products", async (req, res) => {

@@ -11,8 +11,7 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 
 import { getProducts, deleteProduct } from "../../api/products";
-import { Product, ProductId } from "../../api/types";
-
+import { Product } from "../../api/types";
 import { EditModal } from "./EditModal";
 
 export default function BasicTable() {
