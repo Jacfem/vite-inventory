@@ -11,7 +11,16 @@ import { postProduct } from "../../api/products";
 import { findProductByUPC } from "../../api/upc";
 import { modalStyle } from "../styles";
 
-// test upc: 4002293401102
+// test upcs:
+// kitchen knife:
+// 4002293401102
+// medicine, not found:
+// 359726734165
+// lotion:
+// 041167066218
+
+// add from items:
+// integrate with offers for where to buy, sort by cheapest
 
 interface ProductModalProps {
   open: boolean;
@@ -21,6 +30,7 @@ interface ProductModalProps {
 function ProductModal({ open, handleClose }: ProductModalProps) {
   const [inputValue, setInputValue] = useState("");
   const [upcValue, setUPCValue] = useState("");
+  const [item, setItem] = useState({ name: "", size: "", image: "", upc: "" });
 
   const queryClient = useQueryClient();
 
@@ -35,8 +45,14 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
 
   // add cleanup on unmount
   useEffect(() => {
-    if (data?.items[0].title) {
+    if (data?.items[0]?.title) {
       setInputValue(data.items[0].title);
+      setItem({
+        name: data.items[0].title,
+        size: data.items[0].size,
+        image: data.items[0].images[0],
+        upc: upcValue,
+      });
     }
   }, [data]);
 
@@ -82,18 +98,23 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
           </Button>
           <Button
             onClick={() => {
-              postMutation.mutate(inputValue);
+              postMutation.mutate(item);
               handleClose();
+              setInputValue("");
+              setItem({ name: "", size: "", image: "", upc: "" });
             }}
             variant="text"
           >
             Submit
           </Button>
           <div>
-            {isFetching
+            {isFetching && !data?.items
               ? "fetching..."
-              : `UPC item: ${data?.items && data?.items[0].title}`}
+              : `UPC item: ${data?.items && data?.items[0]?.title}: ${
+                  data?.items && data?.items[0]?.size
+                }`}
           </div>
+          <img width={100} src={data?.items && data?.items[0]?.images[0]} />
         </Typography>
       </Box>
     </Modal>

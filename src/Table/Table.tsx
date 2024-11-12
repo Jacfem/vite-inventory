@@ -42,7 +42,6 @@ export default function BasicTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* add types and other fields */}
               {data.map((row: Product) => (
                 <TableRow
                   key={row.name}
@@ -77,6 +76,15 @@ export default function BasicTable() {
                         }}
                       />
                     )}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {row.quantity}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {row.size}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    <img width={100} src={row.image} />
                   </TableCell>
                 </TableRow>
               ))}
