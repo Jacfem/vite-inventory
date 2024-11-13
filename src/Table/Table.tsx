@@ -35,10 +35,9 @@ export default function BasicTable() {
             <TableHead>
               <TableRow>
                 <TableCell>Product Name</TableCell>
-                <TableCell align="right">Quantity</TableCell>
                 <TableCell align="right">Size</TableCell>
                 <TableCell align="right">Expiration Date</TableCell>
-                <TableCell align="right">Location</TableCell>
+                <TableCell align="right">Tags</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -49,6 +48,7 @@ export default function BasicTable() {
                 >
                   <TableCell component="th" scope="row">
                     {row.name}
+                    <img width={100} src={row.image} />
                     <Button
                       variant="text"
                       onClick={() => {
@@ -66,6 +66,7 @@ export default function BasicTable() {
                     >
                       Edit
                     </Button>
+
                     {editOpen && (
                       <EditModal
                         item={currentProduct!}
@@ -78,13 +79,26 @@ export default function BasicTable() {
                     )}
                   </TableCell>
                   <TableCell component="th" scope="row">
-                    {row.quantity}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
                     {row.size}
                   </TableCell>
                   <TableCell component="th" scope="row">
-                    <img width={100} src={row.image} />
+                    <p>
+                      {row.expirationdate
+                        ? new Date(row.expirationdate).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )
+                        : ""}
+                    </p>
+
+                    {/* Why did expirationDate come back with lowercase? */}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    Tags
                   </TableCell>
                 </TableRow>
               ))}

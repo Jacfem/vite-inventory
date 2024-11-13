@@ -12,8 +12,8 @@ import { findProductByUPC } from "../../api/upc";
 import { modalStyle } from "../styles";
 
 // test upcs:
-// kitchen knife:
-// 4002293401102
+// bandaids:
+// 381370044444
 // medicine, not found:
 // 359726734165
 // lotion:
@@ -21,6 +21,7 @@ import { modalStyle } from "../styles";
 
 // add from items:
 // integrate with offers for where to buy, sort by cheapest
+// add tags and search
 
 interface ProductModalProps {
   open: boolean;
@@ -30,7 +31,16 @@ interface ProductModalProps {
 function ProductModal({ open, handleClose }: ProductModalProps) {
   const [inputValue, setInputValue] = useState("");
   const [upcValue, setUPCValue] = useState("");
-  const [item, setItem] = useState({ name: "", size: "", image: "", upc: "" });
+  const [expirationDate, setExpirationDate] = useState<Date | string | null>(
+    null
+  );
+  const [item, setItem] = useState({
+    name: inputValue || "",
+    size: "",
+    image: "",
+    upc: "",
+    expirationDate: "",
+  });
 
   const queryClient = useQueryClient();
 
@@ -43,17 +53,21 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
 
   const { data, isFetching, refetch } = findProductByUPC(upcValue);
 
-  // add cleanup on unmount
   useEffect(() => {
     if (data?.items[0]?.title) {
       setInputValue(data.items[0].title);
       setItem({
-        name: data.items[0].title,
+        name: data.items[0].title || inputValue,
         size: data.items[0].size,
         image: data.items[0].images[0],
         upc: upcValue,
+        expirationDate,
       });
     }
+    // add cleanup on unmount - data exists so not resetting on modal close yet
+    // return () => {
+    //   setItem({ name: "", size: "", image: "", upc: "", expirationDate: null });
+    // };
   }, [data]);
 
   return (
@@ -77,12 +91,27 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
               variant="outlined"
               value={inputValue}
               required
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                setItem({ ...item, name: e.target.value });
+              }}
             />
             <TextField
               label="upc"
               variant="outlined"
               onChange={(e) => setUPCValue(e.target.value)}
+            />
+            <TextField
+              label="expiration date"
+              variant="outlined"
+              helperText="YYYY-MM-DD"
+              onChange={(e) => {
+                const stringToDate = new Date(e.target.value)
+                  .toISOString()
+                  .split("T")[0];
+                setExpirationDate(stringToDate);
+                setItem({ ...item, expirationDate: stringToDate });
+              }}
             />
           </Box>
           <Button onClick={handleClose} variant="text">
@@ -101,7 +130,6 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
               postMutation.mutate(item);
               handleClose();
               setInputValue("");
-              setItem({ name: "", size: "", image: "", upc: "" });
             }}
             variant="text"
           >

@@ -64,7 +64,7 @@ app.get("/api/proxy/upc/:id", async (req, res) => {
 });
 
 app.post("/api/products", async (req, res) => {
-  const { name, size, image, upc } = req.body;
+  const { name, size, image, upc, expirationDate } = req.body;
 
   if (!name) {
     return res.status(400).json({ error: "Name field is required" });
@@ -72,8 +72,8 @@ app.post("/api/products", async (req, res) => {
 
   try {
     const result = await pool.query(
-      "INSERT INTO products (name, size, image, upc) VALUES ($1, $2, $3, $4)",
-      [name, size, image, upc]
+      "INSERT INTO products (name, size, image, upc, expirationDate) VALUES ($1, $2, $3, $4, $5)",
+      [name, size, image, upc, expirationDate]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
