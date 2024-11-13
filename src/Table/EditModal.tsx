@@ -1,13 +1,8 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
+import { Button, TextInput, Modal } from "@mantine/core";
 
-import { modalStyle } from "../styles";
 import { putProduct } from "../../api/products";
 import { Product } from "../../api/types";
 
@@ -30,41 +25,31 @@ export const EditModal = ({ open, item, onClose }: EditModalProps) => {
   });
   return (
     <Modal
-      open={open}
+      opened={open}
       onClose={onClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      title="Edit product"
     >
-      <Box sx={modalStyle}>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Edit product
-          <Box
-            component="form"
-            sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
-            noValidate
-            autoComplete="off"
-          >
-            <TextField
-              label="name"
-              variant="outlined"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-            />
-          </Box>
-          <Button onClick={onClose} variant="text">
-            Close
-          </Button>
-          <Button
-            onClick={() => {
-              putMutation.mutate({ id, name: inputValue });
-              onClose();
-            }}
-            variant="text"
-          >
-            Submit
-          </Button>
-        </Typography>
-      </Box>
+      <TextInput
+        label="Product name"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+      />
+      <Button.Group mt="md">
+        <Button onClick={onClose} variant="text" mr="md">
+          Close
+        </Button>
+        <Button
+          onClick={() => {
+            putMutation.mutate({ id, name: inputValue });
+            onClose();
+          }}
+          variant="text"
+        >
+          Submit
+        </Button>
+      </Button.Group>
     </Modal>
   );
 };

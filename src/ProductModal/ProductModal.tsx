@@ -1,15 +1,10 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
+import { Modal, Button, TextInput, Space } from "@mantine/core";
 
 import { postProduct } from "../../api/products";
 import { findProductByUPC } from "../../api/upc";
-import { modalStyle } from "../styles";
 
 // test upcs:
 // bandaids:
@@ -72,52 +67,41 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
 
   return (
     <Modal
-      open={open}
+      opened={open}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      title="Add a product"
     >
-      <Box sx={modalStyle}>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Add a product
-          <Box
-            component="form"
-            sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
-            noValidate
-            autoComplete="off"
-          >
-            <TextField
-              label="name"
-              variant="outlined"
-              value={inputValue}
-              required
-              onChange={(e) => {
-                setInputValue(e.target.value);
-                setItem({ ...item, name: e.target.value });
-              }}
-            />
-            <TextField
-              label="upc"
-              variant="outlined"
-              onChange={(e) => setUPCValue(e.target.value)}
-            />
-            <TextField
-              label="expiration date"
-              variant="outlined"
-              helperText="YYYY-MM-DD"
-              onChange={(e) => {
-                const stringToDate = new Date(e.target.value)
-                  .toISOString()
-                  .split("T")[0];
-                setExpirationDate(stringToDate);
-                setItem({ ...item, expirationDate: stringToDate });
-              }}
-            />
-          </Box>
-          <Button onClick={handleClose} variant="text">
+      <div>
+        <TextInput
+          label="Product name"
+          value={inputValue}
+          required
+          onChange={(e) => {
+            setInputValue(e.target.value);
+            setItem({ ...item, name: e.target.value });
+          }}
+        />
+        <TextInput label="UPC" onChange={(e) => setUPCValue(e.target.value)} />
+        <TextInput
+          label="Expiration Date"
+          placeholder="YYYY-MM-DD"
+          onChange={(e) => {
+            const stringToDate = new Date(e.target.value)
+              .toISOString()
+              .split("T")[0];
+            setExpirationDate(stringToDate);
+            setItem({ ...item, expirationDate: stringToDate });
+          }}
+        />
+        <Space h="md" />
+        <Button.Group>
+          <Button onClick={handleClose} variant="text" mr="md">
             Close
           </Button>
           <Button
+            mr="md"
             onClick={() => {
               refetch();
             }}
@@ -135,16 +119,9 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
           >
             Submit
           </Button>
-          <div>
-            {isFetching && !data?.items
-              ? "fetching..."
-              : `UPC item: ${data?.items && data?.items[0]?.title}: ${
-                  data?.items && data?.items[0]?.size
-                }`}
-          </div>
-          <img width={100} src={data?.items && data?.items[0]?.images[0]} />
-        </Typography>
-      </Box>
+        </Button.Group>
+        <img width={100} src={data?.items && data?.items[0]?.images[0]} />
+      </div>
     </Modal>
   );
 }

@@ -1,14 +1,8 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
+import { Button } from "@mantine/core";
+import { Table } from "@mantine/core";
 
 import { getProducts, deleteProduct } from "../../api/products";
 import { Product } from "../../api/types";
@@ -30,43 +24,50 @@ export default function BasicTable() {
   return (
     data && (
       <>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Product Name</TableCell>
-                <TableCell align="right">Size</TableCell>
-                <TableCell align="right">Expiration Date</TableCell>
-                <TableCell align="right">Tags</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
+        <Table.ScrollContainer minWidth={500}>
+          <Table
+            highlightOnHover
+            withColumnBorders
+            withRowBorders
+            withTableBorder
+          >
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Product Name</Table.Th>
+                <Table.Th align="right">Size</Table.Th>
+                <Table.Th align="right">Expiration Date</Table.Th>
+                <Table.Th align="right">Tags</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
               {data.map((row: Product) => (
-                <TableRow
-                  key={row.name}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                    <img width={100} src={row.image} />
-                    <Button
-                      variant="text"
-                      onClick={() => {
-                        deleteMutation.mutate(row.id);
-                      }}
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      variant="text"
-                      onClick={() => {
-                        setEditOpen(true);
-                        setCurrentProduct(row);
-                      }}
-                    >
-                      Edit
-                    </Button>
-
+                <Table.Tr key={row.name}>
+                  <Table.Td component="th" scope="row">
+                    <div>
+                      <p>{row.name}</p>
+                      <img width={100} src={row.image} />
+                    </div>
+                    <Button.Group>
+                      <Button
+                        variant="outline"
+                        color="blue"
+                        onClick={() => {
+                          setEditOpen(true);
+                          setCurrentProduct(row);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="filled"
+                        color="red"
+                        onClick={() => {
+                          deleteMutation.mutate(row.id);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </Button.Group>
                     {editOpen && (
                       <EditModal
                         item={currentProduct!}
@@ -77,11 +78,11 @@ export default function BasicTable() {
                         }}
                       />
                     )}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
+                  </Table.Td>
+                  <Table.Td component="th" scope="row">
                     {row.size}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
+                  </Table.Td>
+                  <Table.Td component="th" scope="row">
                     <p>
                       {row.expirationdate
                         ? new Date(row.expirationdate).toLocaleDateString(
@@ -96,15 +97,15 @@ export default function BasicTable() {
                     </p>
 
                     {/* Why did expirationDate come back with lowercase? */}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
+                  </Table.Td>
+                  <Table.Td component="th" scope="row">
                     Tags
-                  </TableCell>
-                </TableRow>
+                  </Table.Td>
+                </Table.Tr>
               ))}
-            </TableBody>
+            </Table.Tbody>
           </Table>
-        </TableContainer>
+        </Table.ScrollContainer>
       </>
     )
   );

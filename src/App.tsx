@@ -1,14 +1,13 @@
 import { useState } from "react";
 
-import Typography from "@mui/material/Typography";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Link from "@mui/material/Link";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
+import { Button, Title } from "@mantine/core";
 
 import BasicTable from "./Table/Table";
 import ProductModal from "./ProductModal/ProductModal";
 import "./App.css";
+import "@mantine/core/styles.css";
+
+// add localization
 
 function App() {
   const [formOpen, setFormOpen] = useState(false);
@@ -17,21 +16,11 @@ function App() {
 
   return (
     <div>
-      <Breadcrumbs aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" href="/">
-          Home
-        </Link>
-        <Link underline="hover" color="inherit" href="/">
-          All Products
-        </Link>
-      </Breadcrumbs>
-      <Typography variant="h3">Inventory App</Typography>
+      <Title>Inventory App</Title>
 
-      <Stack spacing={2} direction="row">
-        <Button onClick={handleOpen} variant="text">
-          Add a product
-        </Button>
-      </Stack>
+      <Button onClick={handleOpen} variant="text">
+        Add a product
+      </Button>
       <BasicTable />
       <ProductModal open={formOpen} handleClose={handleClose} />
     </div>
