@@ -19,12 +19,12 @@ export const getProducts = () => {
   return { status, data };
 }
 
-export const postProduct = async (inputValue: string) => {
+export const postProduct = async (item: Product) => {
   try {
     const response = await fetch("http://localhost:3000/api/products", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: inputValue }),
+      body: JSON.stringify(item),
     });
 
     const data = await response.json();
