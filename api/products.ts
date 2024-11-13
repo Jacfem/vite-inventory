@@ -20,7 +20,6 @@ export const getProducts = () => {
 }
 
 export const postProduct = async (item: Product) => {
-  console.log('post item', item)
   try {
     const response = await fetch("http://localhost:3000/api/products", {
       method: "POST",
