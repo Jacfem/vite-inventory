@@ -3,8 +3,9 @@ export interface Product {
   name: string;
   size?: string;
   quantity?: number;
-  expirationDate: Date;
+  expirationDate?: Date | string; //add datepicker
   image?: string;
+  upc?: string;
 }
 
 export type ProductId = Pick<Product, "id">;

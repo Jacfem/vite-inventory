@@ -35,12 +35,11 @@ export const postProduct = async (item: Product) => {
 };
 
 export const putProduct = async (item: Product) => {
-  const {id, name } = item;
   try {
-    const response = await fetch(`http://localhost:3000/api/products/${id}`, {
+    const response = await fetch(`http://localhost:3000/api/products/${item.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify(item),
     });
 
     const data = await response.json();
