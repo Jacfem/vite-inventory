@@ -25,6 +25,7 @@ export default function BasicTable() {
               <Table.Th>Size</Table.Th>
               <Table.Th>Expiration Date</Table.Th>
               <Table.Th>Tags</Table.Th>
+              <Table.Th>Image</Table.Th>
               <Table.Th>Manage</Table.Th>
             </Table.Tr>
           </Table.Thead>

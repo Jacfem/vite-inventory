@@ -25,8 +25,8 @@ export const Row = ({ product }) => {
       <Table.Td>{product.name}</Table.Td>
       <Table.Td>{product.size}</Table.Td>
       <Table.Td>
-        {product.expirationdate
-          ? new Date(product.expirationdate).toLocaleDateString("en-US", {
+        {product.expirationDate
+          ? new Date(product.expirationDate).toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
               day: "numeric",
@@ -34,6 +34,9 @@ export const Row = ({ product }) => {
           : "unknown"}
       </Table.Td>
       <Table.Td>{product.tags}</Table.Td>
+      <Table.Td>
+        <img width={50} src={product.image} />
+      </Table.Td>
       <Table.Td>
         <ActionIconGroup>
           <ActionIcon
@@ -60,9 +63,9 @@ export const Row = ({ product }) => {
       </Table.Td>
       {editOpen && (
         <EditModal
-          item={currentProduct!}
+          product={currentProduct!}
           open={editOpen}
-          onClose={() => {
+          handleClose={() => {
             setEditOpen(false);
             setCurrentProduct(null);
           }}

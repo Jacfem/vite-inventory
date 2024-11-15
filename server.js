@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import camelcaseKeys from "camelcase-keys";
 import pg from "pg";
 const { Pool } = pg;
 import dotenv from "dotenv";
@@ -33,7 +34,8 @@ app.get("/api/products", async (req, res) => {
       throw err;
     }
 
-    res.status(200).json(result.rows);
+    const convertedResult = camelcaseKeys(result.rows, { deep: true });
+    return res.status(200).json(convertedResult);
   });
 });
 
@@ -54,10 +56,12 @@ app.get("/api/proxy/upc/:id", async (req, res) => {
         return res.status(500).json({ error: "Failed to post item" });
       }
 
+      const convertedResult = camelcaseKeys(body, { deep: true });
+
       if (response.statusCode === 201) {
-        return res.status(201).json(body);
+        return res.status(201).json(convertedResult);
       } else {
-        return res.status(response.statusCode).json(body);
+        return res.status(response.statusCode).json(convertedResult);
       }
     }
   );
@@ -72,7 +76,7 @@ app.post("/api/products", async (req, res) => {
 
   try {
     const result = await pool.query(
-      "INSERT INTO products (name, size, image, upc, expirationDate) VALUES ($1, $2, $3, $4, $5)",
+      "INSERT INTO products (name, size, image, upc, expiration_date) VALUES ($1, $2, $3, $4, $5)",
       [name, size, image, upc, expirationDate]
     );
     res.status(201).json(result.rows[0]);
@@ -83,7 +87,7 @@ app.post("/api/products", async (req, res) => {
 });
 
 app.put("/api/products/:id", async (req, res) => {
-  const { name } = req.body;
+  const { name, size, image, upc, expirationDate } = req.body;
   const productId = req.params.id;
 
   if (!name) {
@@ -92,8 +96,8 @@ app.put("/api/products/:id", async (req, res) => {
 
   try {
     const result = await pool.query(
-      "UPDATE products SET name = $1 WHERE id = $2;",
-      [name, productId]
+      "UPDATE products SET name = $1, size = $2, image = $3, upc = $4, expiration_date = $5 WHERE id = $6",
+      [name, size, image, upc, expirationDate, productId]
     );
     if (result.rowCount === 0) {
       return res.status(404).json({ error: "Product not found" });
