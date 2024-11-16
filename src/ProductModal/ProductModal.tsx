@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { Modal, Button, TextInput, Space } from "@mantine/core";
+import {
+  Modal,
+  Button,
+  TextInput,
+  Space,
+  Pill,
+  PillsInput,
+} from "@mantine/core";
 
 import { postProduct } from "../../api/products";
 import { findProductByUPC } from "../../api/upc";
@@ -34,7 +41,7 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
     size: "",
     image: "",
     upc: "",
-    expirationDate: "",
+    expirationDate: null,
   });
 
   const queryClient = useQueryClient();
@@ -91,6 +98,14 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
             setItem({ ...item, expirationDate: stringToDate });
           }}
         />
+        <PillsInput label="PillsInput">
+          <Pill.Group>
+            <Pill withRemoveButton>Low</Pill>
+            <Pill withRemoveButton>Expiring soon</Pill>
+            <Pill withRemoveButton>Favorite</Pill>
+            <PillsInput.Field placeholder="Enter tags" />
+          </Pill.Group>
+        </PillsInput>
         <Space h="md" />
         <Button.Group>
           <Button onClick={handleClose} variant="text" mr="md">

@@ -79,7 +79,7 @@ app.post("/api/products", async (req, res) => {
       "INSERT INTO products (name, size, image, upc, expiration_date) VALUES ($1, $2, $3, $4, $5)",
       [name, size, image, upc, expirationDate]
     );
-    res.status(201).json(result.rows[0]);
+    res.status(201).json({ body: result.rows[0] });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });

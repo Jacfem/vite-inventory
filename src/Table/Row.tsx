@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { ActionIcon, ActionIconGroup, Table } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
+import { IconEdit, IconTag, IconTrash } from "@tabler/icons-react";
 import { deleteProduct } from "../../api/products";
 import { Product } from "../../api/types";
 import { EditModal } from "./EditModal";
@@ -33,7 +33,20 @@ export const Row = ({ product }) => {
             })
           : "unknown"}
       </Table.Td>
-      <Table.Td>{product.tags}</Table.Td>
+      <Table.Td>
+        {product.tags || (
+          <ActionIcon
+            variant="outline"
+            color="blue"
+            onClick={() => {
+              setEditOpen(true);
+              setCurrentProduct(product);
+            }}
+          >
+            <IconTag />
+          </ActionIcon>
+        )}
+      </Table.Td>
       <Table.Td>
         <img width={50} src={product.image} />
       </Table.Td>
