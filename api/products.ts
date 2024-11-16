@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { notifications } from '@mantine/notifications';
 
 import { Product, ProductId } from './types';
 
@@ -28,9 +29,17 @@ export const postProduct = async (item: Product) => {
     });
 
     const data = await response.json();
+    notifications.show({
+      title: 'Success!',
+      message: 'Product added to your inventory.',
+    })
     return data;
   } catch (error) {
     console.error("Error posting product:", error);
+    notifications.show({
+      title: 'Oops!',
+      message: 'Something went wrong, please try again.',
+    })
   }
 };
 
@@ -43,9 +52,17 @@ export const putProduct = async (item: Product) => {
     });
 
     const data = await response.json();
+    notifications.show({
+      title: 'Success!',
+      message: 'Product updated.',
+    })
     return data;
   } catch (error) {
     console.error("Error updating product:", error);
+    notifications.show({
+      title: 'Oops!',
+      message: 'Something went wrong, please try again.',
+    })
   }
 };
 
@@ -55,9 +72,16 @@ export const deleteProduct = async (id: ProductId) => {
       method: "DELETE",
 
     });
-
+    notifications.show({
+      title: 'Success!',
+      message: 'Product removed.',
+    })
     return id;
   } catch (error) {
     console.error("Error deleting product:", error);
+    notifications.show({
+      title: 'Oops!',
+      message: 'Something went wrong, please try again.',
+    })
   }
 };

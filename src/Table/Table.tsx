@@ -6,7 +6,7 @@ import { Row } from "./Row";
 export default function BasicTable() {
   const { data } = getProducts();
 
-  const rows = data?.map((item) => <Row product={item} />);
+  const rows = data?.map((item) => <Row key={item.id} product={item} />);
 
   return (
     data && (

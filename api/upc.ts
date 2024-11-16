@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
-export const findProductByUPC = (code?: string) => {
+export const findProductByUPC = (code?: string, enabled?: boolean) => {
   const { data, isFetching, refetch } = useQuery({
     // ensure we dont fetch until we trigger it with 'enabled' logic
+    enabled: enabled || false,
     queryKey: ["upc"],
     queryFn: async () => {
       try {

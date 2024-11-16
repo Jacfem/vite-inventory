@@ -46,7 +46,7 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
     },
   });
 
-  const { data, isFetching, refetch } = findProductByUPC(upcValue);
+  const { data, refetch } = findProductByUPC(upcValue);
 
   useEffect(() => {
     if (data?.items[0]?.title) {
@@ -59,10 +59,6 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
         expirationDate,
       });
     }
-    // add cleanup on unmount - data exists so not resetting on modal close yet
-    // return () => {
-    //   setItem({ name: "", size: "", image: "", upc: "", expirationDate: null });
-    // };
   }, [data]);
 
   return (
