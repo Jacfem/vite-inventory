@@ -6,6 +6,7 @@ export interface Product {
   expirationDate?: Date | string; //add datepicker
   image?: string;
   upc?: string;
+  tags?: string[];
 }
 
 export type ProductId = Pick<Product, "id">;

@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { ActionIcon, ActionIconGroup, Table } from "@mantine/core";
-import { useHover } from "@mantine/hooks";
 import { IconEdit, IconTag, IconTrash } from "@tabler/icons-react";
+
 import { deleteProduct } from "../../api/products";
 import { Product } from "../../api/types";
-import { EditModal } from "./EditModal";
+import ProductModal from "../ProductModal/ProductModal";
 
-export const Row = ({ product }) => {
+interface RowProps {
+  product: Product;
+}
+
+export const Row = ({ product }: RowProps) => {
   const queryClient = useQueryClient();
   const [editOpen, setEditOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
@@ -18,10 +21,9 @@ export const Row = ({ product }) => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
   });
-  const { hovered, ref } = useHover();
 
   return (
-    <Table.Tr key={product.name} ref={ref}>
+    <Table.Tr key={product.name}>
       <Table.Td>{product.name}</Table.Td>
       <Table.Td>{product.size}</Table.Td>
       <Table.Td>
@@ -67,7 +69,6 @@ export const Row = ({ product }) => {
             color="red"
             onClick={() => {
               deleteMutation.mutate(product.id);
-              // add toast error/confirmation
             }}
           >
             <IconTrash />
@@ -75,7 +76,7 @@ export const Row = ({ product }) => {
         </ActionIconGroup>
       </Table.Td>
       {editOpen && (
-        <EditModal
+        <ProductModal
           product={currentProduct!}
           open={editOpen}
           handleClose={() => {
