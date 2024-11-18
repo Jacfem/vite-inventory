@@ -3,10 +3,11 @@ import { Table } from "@mantine/core";
 import { getProducts } from "../../api/products";
 import { Row } from "./Row";
 
-export default function BasicTable() {
+// Add search
+export default function ProductTable() {
   const { data } = getProducts();
 
-  const rows = data?.map((item) => <Row product={item} />);
+  const rows = data?.map((item) => <Row key={item.id} product={item} />);
 
   return (
     data && (

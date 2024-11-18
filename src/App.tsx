@@ -2,11 +2,11 @@ import { useState } from "react";
 
 import { Button, Title } from "@mantine/core";
 
-import BasicTable from "./Table/Table";
+import ProductTable from "./Table/Table";
 import ProductModal from "./ProductModal/ProductModal";
 import "./App.css";
 import "@mantine/core/styles.css";
-
+import "@mantine/notifications/styles.css";
 // add localization
 
 function App() {
@@ -21,7 +21,7 @@ function App() {
       <Button onClick={handleOpen} variant="text">
         Add a product
       </Button>
-      <BasicTable />
+      <ProductTable />
       <ProductModal open={formOpen} handleClose={handleClose} />
     </div>
   );
