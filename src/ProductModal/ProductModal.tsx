@@ -10,8 +10,9 @@ import {
   PillsInput,
 } from "@mantine/core";
 
-import { postProduct } from "../../api/products";
+import { postProduct, putProduct } from "../../api/products";
 import { findProductByUPC } from "../../api/upc";
+import { Product } from "../../api/types";
 
 // test upcs:
 // bandaids:
@@ -28,13 +29,14 @@ import { findProductByUPC } from "../../api/upc";
 interface ProductModalProps {
   open: boolean;
   handleClose: () => void;
+  product?: Product; //when editing
 }
 
-function ProductModal({ open, handleClose }: ProductModalProps) {
-  const [inputValue, setInputValue] = useState("");
+function ProductModal({ open, handleClose, product }: ProductModalProps) {
+  const [inputValue, setInputValue] = useState(product ? product.name : "");
   const [upcValue, setUPCValue] = useState("");
   const [expirationDate, setExpirationDate] = useState<Date | string | null>(
-    null
+    product ? product.expirationDate : null
   );
   const [item, setItem] = useState({
     name: inputValue || "",
@@ -48,6 +50,13 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
 
   const postMutation = useMutation({
     mutationFn: postProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+  });
+
+  const putMutation = useMutation({
+    mutationFn: putProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
@@ -74,7 +83,7 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
-      title="Add a product"
+      title="Add a product" // or edit
     >
       <div>
         <TextInput
@@ -86,7 +95,12 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
             setItem({ ...item, name: e.target.value });
           }}
         />
-        <TextInput label="UPC" onChange={(e) => setUPCValue(e.target.value)} />
+        <TextInput
+          value={product ? product.upc : ""}
+          disabled={product?.upc ? true : false}
+          label="UPC"
+          onChange={(e) => setUPCValue(e.target.value)}
+        />
         <TextInput
           label="Expiration Date"
           placeholder="YYYY-MM-DD"
@@ -98,7 +112,7 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
             setItem({ ...item, expirationDate: stringToDate });
           }}
         />
-        <PillsInput label="PillsInput">
+        <PillsInput label="Tags">
           <Pill.Group>
             <Pill withRemoveButton>Low</Pill>
             <Pill withRemoveButton>Expiring soon</Pill>
@@ -122,13 +136,18 @@ function ProductModal({ open, handleClose }: ProductModalProps) {
           </Button>
           <Button
             onClick={() => {
-              postMutation.mutate(item);
+              product
+                ? putMutation.mutate({
+                    ...product,
+                    ...item,
+                  })
+                : postMutation.mutate(item);
               handleClose();
               setInputValue("");
             }}
             variant="text"
           >
-            Submit
+            {product ? "Update" : "Submit"}
           </Button>
         </Button.Group>
         <img width={100} src={data?.items && data?.items[0]?.images[0]} />
